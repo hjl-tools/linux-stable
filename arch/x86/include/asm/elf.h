@@ -258,6 +258,11 @@ extern int force_personality32;
 
 #define ELF_HWCAP		(boot_cpu_data.x86_capability[0])
 
+/* This yields a mask that user programs can use to figure out if
+   SMP and SMT are enabled.  */
+
+#define ELF_HWCAP2		(boot_cpu_data.x86_capability[7])
+
 /* This yields a string that ld.so will use to load implementation
    specific libraries for optimization.  This is more specific in
    intent than poking at uname or /proc/cpuinfo.

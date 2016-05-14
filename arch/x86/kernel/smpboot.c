@@ -444,19 +444,32 @@ static void impress_friends(void)
 {
 	int cpu;
 	unsigned long bogosum = 0;
+	struct cpuinfo_x86 *c;
+	bool smt = false;
 	/*
 	 * Allow the user to impress friends.
 	 */
 	pr_debug("Before bogomips\n");
-	for_each_possible_cpu(cpu)
-		if (cpumask_test_cpu(cpu, cpu_callout_mask))
-			bogosum += cpu_data(cpu).loops_per_jiffy;
+	for_each_possible_cpu(cpu) {
+		if (cpumask_test_cpu(cpu, cpu_callout_mask)) {
+			c = &cpu_data(cpu);
+			bogosum += c->loops_per_jiffy;
+			if (cpumask_weight(topology_sibling_cpumask(cpu)) > 1)
+				smt = true;
+		}
+	}
 	pr_info("Total of %d processors activated (%lu.%02lu BogoMIPS)\n",
 		num_online_cpus(),
 		bogosum/(500000/HZ),
 		(bogosum/(5000/HZ))%100);
 
 	pr_debug("Before bogocount - setting activated=1\n");
+
+	if (num_online_cpus() > 1) {
+		setup_force_cpu_cap(X86_FEATURE_SMP);
+		if (smt)
+			setup_force_cpu_cap(X86_FEATURE_SMT);
+	}
 }
 
 void __inquire_remote_apic(int apicid)

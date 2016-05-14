@@ -183,6 +183,9 @@
  * Auxiliary flags: Linux defined - For features scattered in various
  * CPUID levels like 0x6, 0xA etc, word 7.
  *
+ * High bits are passed to user programs in AT_HWCAP2 to indicate if
+ * SMP and SMT are enabled.
+ *
  * Reuse free bits when adding new feature flags!
  */
 
@@ -193,6 +196,9 @@
 #define X86_FEATURE_PROC_FEEDBACK ( 7*32+ 9) /* AMD ProcFeedbackInterface */
 
 #define X86_FEATURE_INTEL_PT	( 7*32+15) /* Intel Processor Trace */
+
+#define X86_FEATURE_SMP		( 7*32+30) /* SMP */
+#define X86_FEATURE_SMT		( 7*32+31) /* SMT */
 
 /* Virtualization flags: Linux defined, word 8 */
 #define X86_FEATURE_TPR_SHADOW  ( 8*32+ 0) /* Intel TPR Shadow */
